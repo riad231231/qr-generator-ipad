@@ -250,6 +250,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
         <div class="input-group">
             <input type="text" id="firstNameInput" placeholder="Prénom (ex: Jean)" autocomplete="off" autocorrect="off">
             <input type="text" id="lastNameInput" placeholder="NOM (ex: DUPONT)" autocomplete="off" autocorrect="off">
+            <input type="date" id="dateInput" title="Date du shooting (aujourd'hui par défaut)">
         </div>
         <button onclick="generateQR()">Générer le QR Code</button>
     </div>
@@ -272,18 +273,35 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     </div>
 
     <script>
+        // Initialiser la date par défaut au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const dateInput = document.getElementById('dateInput');
+            if (dateInput) {
+                // Format YYYY-MM-DD
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const dd = String(today.getDate()).padStart(2, '0');
+                dateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+        });
+
         // Fonction pour obtenir la date formatée pour le texte ET pour le nom de fichier
         function getFormattedDates() {
-            const today = new Date();
+            let targetDate = new Date();
+            const inputDate = document.getElementById('dateInput').value;
+            if (inputDate) {
+                targetDate = new Date(inputDate);
+            }
 
             // Format pour affichage: "12 avril 2026"
             const displayOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-            const dateDisplay = today.toLocaleDateString('fr-FR', displayOptions);
+            const dateDisplay = targetDate.toLocaleDateString('fr-FR', displayOptions);
 
             // Format pour fichier (demandé par client): "12042026" (ou similaire, on utilise JJMMAAAA)
-            let dd = String(today.getDate()).padStart(2, '0');
-            let mm = String(today.getMonth() + 1).padStart(2, '0'); // Janvier est 0!
-            let yyyy = today.getFullYear();
+            let dd = String(targetDate.getDate()).padStart(2, '0');
+            let mm = String(targetDate.getMonth() + 1).padStart(2, '0'); // Janvier est 0!
+            let yyyy = targetDate.getFullYear();
             const dateFile = dd + mm + yyyy;
 
             return { display: dateDisplay, file: dateFile };
