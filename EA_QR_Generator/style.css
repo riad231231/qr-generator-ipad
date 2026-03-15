@@ -54,6 +54,20 @@ body {
     letter-spacing: 1px;
     color: var(--ea-blue);
     margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.counter-badge {
+    background: var(--ea-red);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(227,0,27,0.3);
 }
 
 .history-list {

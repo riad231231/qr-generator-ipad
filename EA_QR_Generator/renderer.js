@@ -12,6 +12,8 @@ const displayDate = document.getElementById('displayDate');
 const qrDataHint = document.getElementById('qrDataHint');
 
 let history = [];
+let sessionCount = 0;
+const sessionCounterEl = document.getElementById('sessionCounter');
 
 // Init date
 const today = new Date();
@@ -55,9 +57,10 @@ function generateQR() {
     // Generate QR
     QRCode.toCanvas(canvas, qrData, {
         width: 450,
-        margin: 2,
+        margin: 4,
+        errorCorrectionLevel: 'H',
         color: {
-            dark: '#003399',
+            dark: '#000000',
             light: '#ffffff'
         }
     }, function (error) {
@@ -68,6 +71,12 @@ function generateQR() {
         
         // Add to history
         addToHistory(first, last, dateDisplayText, qrData);
+
+        // Update Counter
+        sessionCount++;
+        if (sessionCounterEl) {
+            sessionCounterEl.textContent = sessionCount;
+        }
     });
 }
 

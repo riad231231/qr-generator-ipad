@@ -96,16 +96,43 @@ ipcMain.handle('start-sorting', async (event, { inputDir, outputDir }) => {
 
 async function detectQRCode(imagePath) {
   try {
-    const image = await loadImage(imagePath);
-    const canvas = createCanvas(image.width, image.height);
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(image, 0, 0);
+    const originalImage = await loadImage(imagePath);
     
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
-    
-    return code ? code.data.trim() : null;
+    // On essaie d'abord avec l'image originale (ou redimensionnée si trop grande)
+    const result = await tryDetect(originalImage, 1.0);
+    if (result) return result;
+
+    // Si ça échoue, on tente une version plus petite (souvent plus efficace pour jsQR sur de gros fichiers)
+    const resultSmall = await tryDetect(originalImage, 0.5);
+    if (resultSmall) return resultSmall;
+
+    return null;
   } catch (err) {
+    console.error(`Erreur sur ${imagePath}:`, err);
     return null;
   }
+}
+
+async function tryDetect(image, scale) {
+  const width = Math.floor(image.width * scale);
+  const height = Math.floor(image.height * scale);
+  
+  // Limite raisonnable pour éviter de saturer la mémoire et aider jsQR
+  if (width > 2500 || height > 2500) {
+    return tryDetect(image, 2500 / Math.max(image.width, image.height));
+  }
+
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext('2d');
+  
+  // On dessine l'image avec lissage désactivé pour garder les bords du QR nets
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(image, 0, 0, width, height);
+  
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const code = jsQR(imageData.data, width, height, {
+    inversionAttempts: "dontInvert",
+  });
+  
+  return code ? code.data.trim() : null;
 }

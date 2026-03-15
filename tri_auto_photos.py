@@ -31,20 +31,30 @@ def setup_directories():
     return True
 
 def extract_qr_text(image_path):
-    """Ouvre l'image et cherche un QR code. Retourne le texte lu, ou None."""
-    # cv2 lit l'image
+    """Ouvre l'image et cherche un QR code avec plusieurs tentatives de prétraitement."""
     img = cv2.imread(image_path)
     if img is None:
         return None
     
-    # cv2 décode les QR codes présents
     detector = cv2.QRCodeDetector()
-    try:
-        data, bbox, _ = detector.detectAndDecode(img)
-        if data:
-            return data.strip()
-    except Exception as e:
-        pass
+    
+    # 1. Tentative sur l'image originale
+    data, _, _ = detector.detectAndDecode(img)
+    if data: return data.strip()
+    
+    # 2. Tentative avec Gris + Contraste
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+    gray = clahe.apply(gray)
+    data, _, _ = detector.detectAndDecode(gray)
+    if data: return data.strip()
+    
+    # 3. Tentative avec plusieurs échelles (si l'image est trop grande, OpenCV peine parfois)
+    h, w = img.shape[:2]
+    for scale in [0.5, 0.25]:
+        resized = cv2.resize(img, (int(w*scale), int(h*scale)), interpolation=cv2.INTER_AREA)
+        data, _, _ = detector.detectAndDecode(resized)
+        if data: return data.strip()
         
     return None
 
