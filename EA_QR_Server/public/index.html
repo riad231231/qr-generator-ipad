@@ -81,7 +81,19 @@
 
         .header-actions {
             display: flex;
+            align-items: center;
             gap: 8px;
+        }
+
+        .counter-badge {
+            background: var(--ea-red);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 5px;
+            font-weight: 700;
+            box-shadow: 0 2px 5px rgba(227,0,27,0.3);
         }
 
         .action-btn {
@@ -287,7 +299,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="header-top">
-                <h2>Historique</h2>
+                <h2>Historique <span id="sessionCounter" class="counter-badge">0</span></h2>
                 <div class="header-actions">
                     <a href="/api/export" class="action-btn">CSV</a>
                     <button onclick="newSession()" class="action-btn danger">Session</button>
@@ -337,11 +349,18 @@
         document.getElementById('generateBtn').addEventListener('click', generateQR);
 
         let fullHistory = [];
+        let sessionCount = 0;
+        const sessionCounterEl = document.getElementById('sessionCounter');
 
         async function fetchHistory() {
             try {
                 const res = await fetch('/api/history');
                 fullHistory = await res.json();
+                
+                // Mettre à jour le compteur de session
+                sessionCount = fullHistory.length;
+                if (sessionCounterEl) sessionCounterEl.textContent = sessionCount;
+
                 filterHistory();
             } catch (e) { console.error(e); }
         }
@@ -420,7 +439,13 @@
 
             const qrcodeDiv = document.getElementById('qrcode');
             qrcodeDiv.innerHTML = "";
-            new QRCode(qrcodeDiv, { text: qrData, width: 400, height: 400, colorDark: "#003399" });
+            new QRCode(qrcodeDiv, { 
+                text: qrData, 
+                width: 400, 
+                height: 400, 
+                colorDark: "#000000",
+                correctLevel: QRCode.CorrectLevel.H 
+            });
 
             // Save to DB only if it's a new generation
             if (shouldSave) {

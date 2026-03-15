@@ -91,12 +91,24 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
         }
 
         h2 {
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 25px;
-            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .counter-badge {
+            background: var(--ea-red);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            box-shadow: 0 2px 5px rgba(227,0,27,0.3);
+            text-transform: none;
+            letter-spacing: normal;
         }
 
         .input-group {
@@ -245,7 +257,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
             <div class="slogan">you live <span>we care</span></div>
         </div>
 
-        <h2>Powered By Studioriad</h2>
+        <h2>Powered By Studioriad <span id="sessionCounter" class="counter-badge">0</span></h2>
 
         <div class="input-group">
             <input type="text" id="firstNameInput" placeholder="Prénom (ex: Jean)" autocomplete="off" autocorrect="off">
@@ -273,6 +285,9 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     </div>
 
     <script>
+        let sessionCount = 0;
+        const sessionCounterEl = document.getElementById('sessionCounter');
+
         // Initialiser la date par défaut au chargement
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
@@ -349,6 +364,10 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
             // Passer en plein écran QR Code
             document.body.classList.add('mode-qr');
+
+            // Mise à jour du compteur
+            sessionCount++;
+            if (sessionCounterEl) sessionCounterEl.textContent = sessionCount;
         }
 
         function resetForm() {
