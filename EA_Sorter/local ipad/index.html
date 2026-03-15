@@ -56,7 +56,19 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
             margin: 0;
             font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .count-badge {
+            background: var(--ea-red);
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            min-width: 24px;
+            text-align: center;
         }
 
         .header-top {
@@ -345,7 +357,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="header-top">
-                <h2>Historique</h2>
+                <h2>Historique <span id="sessionCount" class="count-badge">0</span></h2>
                 <div class="header-actions">
                     <button onclick="exportToCSV()" class="action-btn">CSV</button>
                     <button onclick="newSession()" class="action-btn danger">Session</button>
@@ -406,6 +418,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
         const lastNameInput = document.getElementById('lastNameInput');
         const dateInput = document.getElementById('dateInput');
         const historyList = document.getElementById('historyList');
+        const sessionCount = document.getElementById('sessionCount');
         const qrOverlay = document.getElementById('qrOverlay');
 
         let history = JSON.parse(localStorage.getItem('ea_history_offline') || '[]');
@@ -494,8 +507,11 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
             if (filtered.length === 0) {
                 historyList.innerHTML = '<p class="empty-history">' + (query ? 'Aucun résultat' : 'Historique vide') + '</p>';
+                sessionCount.textContent = "0";
                 return;
             }
+
+            sessionCount.textContent = history.length;
 
             historyList.innerHTML = filtered.map(item => `
                 <div class="history-item" onclick="loadHistoryItem('${item.first}', '${item.last}')">
