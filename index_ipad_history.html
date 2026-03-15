@@ -51,15 +51,35 @@
             padding: 40px 20px 20px;
             background: var(--ea-blue);
             color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .sidebar-header h2 {
             margin: 0;
             font-size: 1.1rem;
             font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255,255,255,0.5);
         }
 
         .action-btn {
@@ -310,8 +330,11 @@
     <!-- Sidebar Historique -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>Historique</h2>
-            <button onclick="newSession()" class="action-btn">Vider</button>
+            <div class="header-top">
+                <h2>Historique</h2>
+                <button onclick="newSession()" class="action-btn">Vider</button>
+            </div>
+            <input type="text" id="historySearch" class="search-box" placeholder="Chercher un nom..." oninput="renderHistory()">
         </div>
         <div id="historyList" class="history-list">
             <!-- Rempli par JS -->
@@ -430,7 +453,8 @@
             if (shouldSave) {
                 const scan = { first, last, dateDisplayText, id: Date.now() };
                 history.unshift(scan);
-                if(history.length > 20) history.pop();
+                // Augmenter la limite pour supporter 2000+ personnes
+                if(history.length > 2000) history.pop(); 
                 localStorage.setItem('ea_history', JSON.stringify(history));
                 renderHistory();
             }
@@ -447,12 +471,17 @@
         }
 
         function renderHistory() {
-            if (history.length === 0) {
-                historyList.innerHTML = '<p class="empty-history">Aucun scan récent</p>';
+            const query = document.getElementById('historySearch').value.toLowerCase();
+            const filtered = history.filter(item => 
+                `${item.first} ${item.last}`.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                historyList.innerHTML = '<p class="empty-history">' + (query ? 'Aucun résultat' : 'Aucun scan récent') + '</p>';
                 return;
             }
 
-            historyList.innerHTML = history.map(item => `
+            historyList.innerHTML = filtered.map(item => `
                 <div class="history-item" onclick="loadHistoryItem('${item.first}', '${item.last}')">
                     <div class="h-content">
                         <span class="h-name">${item.first} ${item.last}</span>

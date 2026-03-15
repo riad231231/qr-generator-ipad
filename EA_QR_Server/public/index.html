@@ -48,15 +48,35 @@
             padding: 40px 20px 20px;
             background: var(--ea-blue);
             color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .sidebar-header h2 {
             margin: 0;
             font-size: 1.1rem;
             font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255,255,255,0.5);
         }
 
         .header-actions {
@@ -266,11 +286,14 @@
 
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>Historique</h2>
-            <div class="header-actions">
-                <a href="/api/export" class="action-btn">CSV</a>
-                <button onclick="newSession()" class="action-btn danger">Session</button>
+            <div class="header-top">
+                <h2>Historique</h2>
+                <div class="header-actions">
+                    <a href="/api/export" class="action-btn">CSV</a>
+                    <button onclick="newSession()" class="action-btn danger">Session</button>
+                </div>
             </div>
+            <input type="text" id="historySearch" class="search-box" placeholder="Chercher un nom..." oninput="filterHistory()">
         </div>
         <div id="historyList" class="history-list"></div>
     </aside>
@@ -313,12 +336,22 @@
 
         document.getElementById('generateBtn').addEventListener('click', generateQR);
 
+        let fullHistory = [];
+
         async function fetchHistory() {
             try {
                 const res = await fetch('/api/history');
-                const data = await res.json();
-                renderHistory(data);
+                fullHistory = await res.json();
+                filterHistory();
             } catch (e) { console.error(e); }
+        }
+
+        function filterHistory() {
+            const query = document.getElementById('historySearch').value.toLowerCase();
+            const filtered = fullHistory.filter(item => 
+                `${item.first_name} ${item.last_name}`.toLowerCase().includes(query)
+            );
+            renderHistory(filtered);
         }
 
         function renderHistory(history) {
