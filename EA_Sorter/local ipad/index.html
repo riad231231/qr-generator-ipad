@@ -443,8 +443,9 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
             }
 
             // Mise en forme
-            first = first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
-            last = last.toUpperCase();
+            // first = first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+            // last = last.toUpperCase();
+            // Note: On garde les accents tels quels maintenant
 
             // Date processing
             const targetDate = new Date(dateVal);
@@ -457,6 +458,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
             const dateDisplayText = targetDate.toLocaleDateString('fr-FR', displayOptions);
 
             const qrData = `${first} ${last}_${dateFile}`;
+            const utf8Data = unescape(encodeURIComponent(qrData));
 
             // Affichage
             document.getElementById('nameDisplay').textContent = `${first} ${last}`;
@@ -471,7 +473,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
             const qrSize = Math.min(window.innerWidth * 0.6, 500);
 
             new QRCode(qrcodeDiv, {
-                text: qrData,
+                text: utf8Data,
                 width: qrSize,
                 height: qrSize,
                 colorDark: "#000000",
