@@ -1,0 +1,13 @@
+node_modules
+.DS_Store
+*.db
+*.dmg
+dist
+EA_Sorter/icon_transparent.png
+EA_QR_Generator/icon_transparent.png
+EA_Sorter/icon.png
+EA_QR_Generator/icon.png
+venv/
+.env
+__pycache__/
+*.pyc

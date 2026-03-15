@@ -1,0 +1,43 @@
+{
+  "name": "ea-photo-sorter",
+  "version": "1.0.0",
+  "description": "Assistant de tri de photos par QR Code pour Europ Assistance",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --mac"
+  },
+  "build": {
+    "appId": "com.studioriad.easorter",
+    "productName": "EA Photo Sorter",
+    "mac": {
+      "category": "public.app-category.photography",
+      "target": [
+        "dmg"
+      ],
+      "icon": "icon.icns"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer.js",
+      "index.html",
+      "style.css",
+      "package.json",
+      "node_modules/**/*"
+    ]
+  },
+  "author": "Antigravity",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^34.3.0",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "canvas": "^3.1.0",
+    "fs-extra": "^11.3.0",
+    "glob": "^10.3.10",
+    "jsqr": "^1.4.0"
+  }
+}

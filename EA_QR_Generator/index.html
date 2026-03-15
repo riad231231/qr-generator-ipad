@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA QR Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="node_modules/qrcode/build/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="drag-region"></div>
+    
+    <div class="app-layout">
+        <!-- Sidebar : Historique -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Derniers scans</h3>
+            </div>
+            <div id="historyList" class="history-list">
+                <!-- Les items d'historique apparaîtront ici -->
+                <p class="empty-hint">Aucun historique</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainView">
+            <header>
+                <div class="logo">
+                    <div class="logo-mark"></div>
+                    <h1>Générateur QR Code</h1>
+                </div>
+                <p class="subtitle">Session de shooting Europ Assistance</p>
+            </header>
+
+            <div class="form-container">
+                <div class="input-group">
+                    <div class="field">
+                        <label>Prénom</label>
+                        <input type="text" id="firstNameInput" placeholder="ex: Jean" autofocus>
+                    </div>
+                    <div class="field">
+                        <label>Nom</label>
+                        <input type="text" id="lastNameInput" placeholder="ex: DUPONT">
+                    </div>
+                    <div class="field">
+                        <label>Date du shooting</label>
+                        <input type="date" id="dateInput">
+                    </div>
+                </div>
+                <button id="generateBtn" class="primary">Générer le QR Code</button>
+            </div>
+        </main>
+
+        <!-- QR Display Overlay (Fullscreen-ish) -->
+        <div id="qrOverlay" class="qr-overlay" style="display: none;">
+            <div class="overlay-content">
+                <div class="brand-small">
+                    <div class="logo-text">europ assistance</div>
+                    <div class="slogan">you live <span>we care</span></div>
+                </div>
+                
+                <h2 id="displayFullName">JEAN DUPONT</h2>
+                <p id="displayDate" class="display-date">12 avril 2026</p>
+
+                <div class="qr-frame">
+                    <canvas id="qrcodeCanvas"></canvas>
+                </div>
+
+                <div class="qr-data-hint" id="qrDataHint">jean DUPONT_12042026</div>
+
+                <button id="closeOverlayBtn" class="secondary-white">Collaborateur Suivant</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

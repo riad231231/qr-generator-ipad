@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA Photo Sorter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="drag-region"></div>
+    
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <div class="logo-mark"></div>
+                <h1>EA Photo Sorter</h1>
+            </div>
+            <p class="subtitle">Assistant de tri intelligent</p>
+        </header>
+
+        <main>
+            <div class="setup-cards">
+                <div class="card" id="sourceBtn">
+                    <div class="icon">📸</div>
+                    <h3>Source</h3>
+                    <p id="sourcePath">Aucun dossier sélectionné</p>
+                    <button class="secondary">Choisir</button>
+                </div>
+
+                <div class="card" id="destBtn">
+                    <div class="icon">📁</div>
+                    <h3>Destination</h3>
+                    <p id="destPath">Aucun dossier sélectionné</p>
+                    <button class="secondary">Choisir</button>
+                </div>
+            </div>
+
+            <div class="action-zone">
+                <button id="startBtn" class="primary" disabled>Lancer le Tri Automatique</button>
+            </div>
+
+            <div class="status-zone" id="statusZone" style="display: none;">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="progressBarFill" class="fill"></div>
+                    </div>
+                    <span id="progressText">Prêt...</span>
+                </div>
+                
+                <div class="detection-alert" id="detectionAlert">
+                    <span class="badge">Dernière détection :</span>
+                    <span id="detectedName">-</span>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by Studioriad — © 2026 Europ Assistance</p>
+        </footer>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
